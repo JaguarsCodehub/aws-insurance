@@ -1,6 +1,8 @@
 import boto3
 import uuid
 from decimal import Decimal
+from datetime import datetime
+from typing import Dict, Any
 from app.core.config import AWS_REGION, DYNAMODB_TABLE
 
 dynamo_client = boto3.resource(
@@ -35,3 +37,75 @@ def get_quotes_from_dynamo():
         return items
     except Exception as e:
         raise Exception(f"Failed to fetch quotes: {str(e)}")
+
+class DynamoService:
+    def __init__(self):
+        self.dynamodb = boto3.resource('dynamodb')
+        self.table = self.dynamodb.Table('car_damage_analyses')
+
+    def store_analysis(self, image_url: str, analysis_results: Dict[str, Any]) -> str:
+        analysis_id = str(uuid.uuid4())
+        
+        # Convert float values to Decimal for DynamoDB
+        def convert_floats(obj):
+            if isinstance(obj, float):
+                return Decimal(str(obj))
+            elif isinstance(obj, dict):
+                return {k: convert_floats(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_floats(i) for i in obj]
+            return obj
+
+        try:
+            # Convert boolean to number for the GSI
+            damage_detected_num = 1 if analysis_results.get('damage_detected', False) else 0
+            
+            item = {
+                'analysis_id': analysis_id,
+                'image_url': image_url,
+                'timestamp': datetime.utcnow().isoformat(),
+                'analysis_results': convert_floats(analysis_results),
+                'is_vehicle': analysis_results.get('is_vehicle', False),
+                'damage_detected': damage_detected_num,  # Store as number
+                'confidence_score': convert_floats(analysis_results.get('confidence_score', 0))
+            }
+            
+            self.table.put_item(Item=item)
+            return analysis_id
+            
+        except Exception as e:
+            raise Exception(f"Failed to store analysis: {str(e)}")
+
+    def get_analysis(self, analysis_id: str) -> Dict[str, Any]:
+        try:
+            response = self.table.get_item(Key={'analysis_id': analysis_id})
+            item = response.get('Item')
+            if item:
+                # Convert number back to boolean for damage_detected
+                item['damage_detected'] = bool(item['damage_detected'])
+            return item
+        except Exception as e:
+            raise Exception(f"Failed to retrieve analysis: {str(e)}")
+
+    def get_all_analyses(self):
+        try:
+            response = self.table.scan()
+            items = response.get('Items', [])
+            
+            # Convert Decimal back to float and number back to boolean
+            def convert_types(obj):
+                if isinstance(obj, Decimal):
+                    return float(obj)
+                elif isinstance(obj, dict):
+                    result = {k: convert_types(v) for k, v in obj.items()}
+                    # Convert damage_detected back to boolean at the top level
+                    if 'damage_detected' in result:
+                        result['damage_detected'] = bool(result['damage_detected'])
+                    return result
+                elif isinstance(obj, list):
+                    return [convert_types(i) for i in obj]
+                return obj
+            
+            return [convert_types(item) for item in items]
+        except Exception as e:
+            raise Exception(f"Failed to fetch analyses: {str(e)}")

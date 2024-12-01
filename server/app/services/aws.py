@@ -13,26 +13,30 @@ class S3Service:
         )
         self.bucket = S3_BUCKET
 
-    def upload_file(self, file: UploadFile) -> str:
+    async def upload_file(self, file: UploadFile, key: str = None) -> str:
         try:
-            # Generate unique filename
-            file_extension = file.filename.split('.')[-1]
-            unique_filename = f"{uuid.uuid4()}.{file_extension}"
+            # If no key is provided, generate a unique filename
+            if key is None:
+                file_extension = file.filename.split('.')[-1]
+                key = f"{uuid.uuid4()}.{file_extension}"
             
             # Read file content
-            contents = file.file.read()
+            contents = await file.read()
             
             # Upload to S3
             self.s3_client.put_object(
                 Bucket=self.bucket,
-                Key=unique_filename,
+                Key=key,
                 Body=contents,
                 ContentType=file.content_type
             )
             
             # Generate URL
-            url = f"https://{self.bucket}.s3.{AWS_REGION}.amazonaws.com/{unique_filename}"
+            url = f"https://{self.bucket}.s3.{AWS_REGION}.amazonaws.com/{key}"
             return url
             
         except Exception as e:
             raise Exception(f"Failed to upload file: {str(e)}")
+        finally:
+            # Reset file pointer for potential reuse
+            await file.seek(0)
