@@ -1,10 +1,10 @@
 import boto3
-from app.core.config import AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from app.core.config import AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 
 def create_damage_analysis_table():
     dynamodb = boto3.client(
         'dynamodb',
-        region_name=AWS_REGION,
+        region_name=AWS_DEFAULT_REGION,
         aws_access_key_id=AWS_ACCESS_KEY_ID,
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY
     )

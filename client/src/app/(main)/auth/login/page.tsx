@@ -21,7 +21,7 @@ export default function Login() {
         email: formData.email.trim(),
         password: formData.password
       });
-      
+
       if (response.tokens) {
         localStorage.setItem('accessToken', response.tokens.AccessToken);
         localStorage.setItem('idToken', response.tokens.IdToken);
@@ -44,7 +44,8 @@ export default function Login() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Sign in to your account</h1>
+          <h1 className="text-4xl font-bold font-serif">Sign in to your account</h1>
+          <p className="text-black text-xl font-serif">Welcome back to your account</p>
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-6">
@@ -53,10 +54,10 @@ export default function Login() {
               {error}
             </div>
           )}
-          
+
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium font-serif text-gray-700">
                 Email address
               </label>
               <input
@@ -71,7 +72,7 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium font-serif text-gray-700">
                 Password
               </label>
               <input

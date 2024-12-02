@@ -1,13 +1,13 @@
 from fastapi import UploadFile
 import boto3
 import uuid
-from app.core.config import AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET
+from app.core.config import AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET
 
 class S3Service:
     def __init__(self):
         self.s3_client = boto3.client(
             's3',
-            region_name=AWS_REGION,
+            region_name=AWS_DEFAULT_REGION,
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY
         )
@@ -32,7 +32,7 @@ class S3Service:
             )
             
             # Generate URL
-            url = f"https://{self.bucket}.s3.{AWS_REGION}.amazonaws.com/{key}"
+            url = f"https://{self.bucket}.s3.{AWS_DEFAULT_REGION}.amazonaws.com/{key}"
             return url
             
         except Exception as e:

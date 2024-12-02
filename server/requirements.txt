@@ -2,5 +2,5 @@ fastapi
 uvicorn
 boto3
 python-dotenv
-# pydantic-settings
 python-multipart
+pydantic

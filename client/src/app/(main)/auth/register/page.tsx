@@ -38,10 +38,10 @@ export default function Register() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-4xl font-bold font-serif">Create your account</h1>
+          <p className="mt-2 text-gray-600 font-serif">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-blue-600 hover:underline">
+            <Link href="/auth/login" className="text-blue-600 hover:underline font-serif">
               Sign in
             </Link>
           </p>
@@ -53,10 +53,10 @@ export default function Register() {
               {error}
             </div>
           )}
-          
+
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium font-serif text-gray-700">
                 Email address
               </label>
               <input
@@ -71,7 +71,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium font-serif text-gray-700">
                 Password
               </label>
               <input

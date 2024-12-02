@@ -58,7 +58,7 @@ The frontend will be available at `http://localhost:3000`
 ```
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
-AWS_REGION=us-east-1
+AWS_DEFAULT_REGION=us-east-1
 S3_BUCKET=your-bucket-name
 COGNITO_USER_POOL_CLIENT_ID=your_client_id
 COGNITO_CLIENT_SECRET=your_client_secret

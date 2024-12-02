@@ -1,12 +1,12 @@
 import boto3
 from typing import Dict, Any
-from app.core.config import AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET
+from app.core.config import AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET
 
 class RekognitionService:
     def __init__(self):
         self.client = boto3.client(
             'rekognition',
-            region_name=AWS_REGION,
+            region_name=AWS_DEFAULT_REGION,
             aws_access_key_id=AWS_ACCESS_KEY_ID,
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY
         )

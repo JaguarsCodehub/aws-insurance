@@ -1,13 +1,23 @@
 import boto3
-import uuid
+import os
+from dotenv import load_dotenv
 from decimal import Decimal
 from datetime import datetime
 from typing import Dict, Any
-from app.core.config import AWS_REGION, DYNAMODB_TABLE
+from app.core.config import AWS_DEFAULT_REGION, DYNAMODB_TABLE
+import uuid
+
+# Load environment variables
+load_dotenv()
+
+# Get AWS configuration from environment variables
+AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION') or os.getenv('AWS_REGION')
 
 dynamo_client = boto3.resource(
-    "dynamodb", 
-    region_name=AWS_REGION
+    'dynamodb',
+    region_name=AWS_DEFAULT_REGION,
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
 )
 table = dynamo_client.Table(DYNAMODB_TABLE)
 
